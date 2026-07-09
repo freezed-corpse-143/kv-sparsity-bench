@@ -1,0 +1,38 @@
+[
+  {
+    "strategy": "baseline",
+    "ratio": 0.1,
+    "avg_kv_size": 1032.5,
+    "tokens_per_sec": 752.89
+  },
+  {
+    "strategy": "baseline",
+    "ratio": 0.2,
+    "avg_kv_size": 1032.5,
+    "tokens_per_sec": 708.1
+  },
+  {
+    "strategy": "baseline",
+    "ratio": 0.3,
+    "avg_kv_size": 1032.5,
+    "tokens_per_sec": 661.3
+  },
+  {
+    "strategy": "h2o",
+    "ratio": 0.1,
+    "avg_kv_size": 204.1,
+    "tokens_per_sec": 696.65
+  },
+  {
+    "strategy": "h2o",
+    "ratio": 0.2,
+    "avg_kv_size": 409.1,
+    "tokens_per_sec": 707.09
+  },
+  {
+    "strategy": "h2o",
+    "ratio": 0.3,
+    "avg_kv_size": 614.1,
+    "tokens_per_sec": 684.39
+  }
+]

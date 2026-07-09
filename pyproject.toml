@@ -1,0 +1,30 @@
+[project]
+name = "kv-sparsity-bench"
+version = "0.1.0"
+description = "KV-Cache Sparsity Benchmark — eviction & structured sparsity evaluation"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.4.0",
+    "transformers>=4.40.0",
+    "datasets>=2.18.0",
+    "numpy",
+    "matplotlib",
+    "seaborn",
+    "pyyaml",
+    "tqdm",
+    "huggingface-hub<0.27",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"

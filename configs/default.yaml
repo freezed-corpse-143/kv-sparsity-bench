@@ -1,0 +1,21 @@
+model:
+  name: "models/tiny-test-v2"
+  dtype: float32
+  device: "cpu"
+
+strategy:
+  name: baseline
+  budget_ratio: 0.3
+  max_cache_capacity: 2048
+  min_budget: 64
+
+max_seq_length: 2048
+max_cache_capacity: 2048
+
+tasks:
+  - name: perplexity
+    stride: 512
+
+output:
+  dir: results/
+  save_checkpoints: true
