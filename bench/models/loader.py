@@ -15,14 +15,13 @@ class SimpleTokenizer:
         self.inv = {v: k for k, v in self.vocab.items()}
         self.pad_token_id = self.vocab["<|endoftext|>"]
         self.eos_token_id = self.vocab["<|endoftext|>"]
-        self.bos_token_id = self.vocab["<|endoftext|>"]
+    def decode(self, ids: list[int], **kwargs) -> str:
+        return "".join(self.inv.get(i, "") for i in ids)
 
     def encode(self, text: str) -> list[int]:
         eos = self.vocab["<|endoftext|>"]
         return [self.vocab.get(c, eos) for c in text]
 
-    def decode(self, ids: list[int]) -> str:
-        return "".join(self.inv.get(i, "") for i in ids)
 
     def __call__(self, text: str, **kwargs):
         import torch

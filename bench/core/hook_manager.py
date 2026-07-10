@@ -7,11 +7,7 @@ from .score_buffer import ScoreBuffer
 
 
 class HookManager:
-    """Captures attention softmax scores from model decoder layers.
-
-    Uses forward hooks on each decoder layer's attention module to record
-    per-head softmax scores after each forward pass.
-    """
+    """Captures attention softmax scores via forward hooks on attention modules."""
 
     def __init__(self, score_buffer: ScoreBuffer):
         self.score_buffer = score_buffer
@@ -19,11 +15,6 @@ class HookManager:
         self._captured_attentions: list[list[torch.Tensor]] = []
 
     def install(self, model: PreTrainedModel):
-        """Register hooks on each decoder layer's self-attention.
-
-        Requires model to use attn_implementation='eager' and
-        output_attentions=True so that the forward returns softmax weights.
-        """
         self._captured_attentions = []
         layers = _get_layers(model)
 
@@ -31,8 +22,6 @@ class HookManager:
             attn = _get_attention_module(layer)
             if attn is None:
                 continue
-
-            # Register forward hook that runs AFTER attention forward
             handle = attn.register_forward_hook(
                 self._make_attn_hook(layer_idx)
             )
@@ -40,20 +29,22 @@ class HookManager:
 
     def _make_attn_hook(self, layer_idx: int):
         def hook(module, inputs, output):
-            # Output from HuggingFace eager attention is typically
-            # (attn_output, present_kv, attn_weights) when output_attentions=True
-            # attn_weights is (1, n_heads, q_len, kv_len)
-            if isinstance(output, tuple) and len(output) >= 3:
-                attn_weights = output[2]
-                if attn_weights is not None and isinstance(attn_weights, torch.Tensor):
-                    # attn_weights: (batch, n_heads, q_len, kv_len)
-                    # Average over query positions to get per-token scores
-                    n_heads = min(4, attn_weights.size(1))  # sample heads
-                    for h in range(n_heads):
-                        self.score_buffer.update(
-                            layer_idx, h,
-                            attn_weights[0:1, h : h + 1].detach().cpu(),
-                        )
+            # GPT2: (hidden_states, attentions)
+            # LLaMA/Qwen: (hidden_states, present_kv, attentions)
+            attn_weights = None
+            if isinstance(output, tuple):
+                if len(output) >= 3:
+                    attn_weights = output[2]
+                elif len(output) == 2:
+                    attn_weights = output[1]
+
+            if attn_weights is not None and isinstance(attn_weights, torch.Tensor):
+                n_heads = min(4, attn_weights.size(1))
+                for h in range(n_heads):
+                    self.score_buffer.update(
+                        layer_idx, h,
+                        attn_weights[0:1, h: h + 1].detach().cpu(),
+                    )
         return hook
 
     def remove(self):
@@ -67,7 +58,6 @@ class HookManager:
 
 
 def _get_layers(model: PreTrainedModel) -> list:
-    """Get decoder layers regardless of model architecture."""
     for attr in ("model", "transformer", "encoder", "decoder"):
         sub = getattr(model, attr, None)
         if sub is not None:
@@ -83,7 +73,6 @@ def _get_layers(model: PreTrainedModel) -> list:
 
 
 def _get_attention_module(layer) -> object | None:
-    """Get the self-attention module from a decoder layer."""
     for attr in ("self_attn", "attention", "attn"):
         attn = getattr(layer, attr, None)
         if attn is not None:

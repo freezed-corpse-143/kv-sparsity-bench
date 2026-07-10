@@ -20,3 +20,13 @@ Last run: never
 
 ---
 Run log: —
+
+## Run Log
+
+### 2026-07-09
+- P0 骨架完成：core/ + strategies + ModelLoader + Runner + PerplexityTask
+- P1 实现 H2O + SnapKV strategy
+- 全量对比运行成功（baseline vs H2O @ 10%/20%/30%）
+- 生成实验报告 docs/report.md + 可视化图表
+- 推送到 GitHub: freezed-corpse-143/kv-sparsity-bench
+- Loop-engineering 已配置（Loop Ready 100/100）

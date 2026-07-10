@@ -1,0 +1,90 @@
+[
+  {
+    "perplexity": 129.7027,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "standard",
+    "strategy": "baseline",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 129.7027,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "standard",
+    "strategy": "baseline",
+    "ratio": 0.25
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "h2o",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "h2o",
+    "ratio": 0.25
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "rocketkv",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "rocketkv",
+    "ratio": 0.25
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "curdkv",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "curdkv",
+    "ratio": 0.25
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "mustafar",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 98.833,
+    "n_tokens": 398,
+    "seq_len": 398,
+    "mode": "eviction",
+    "avg_kv_size": 2.0,
+    "strategy": "mustafar",
+    "ratio": 0.25
+  }
+]
