@@ -32,5 +32,59 @@
     "avg_kv_size": 3.5,
     "strategy": "h2o",
     "ratio": 0.25
+  },
+  {
+    "perplexity": 180.2815,
+    "n_tokens": 8192,
+    "seq_len": 8192,
+    "mode": "eviction",
+    "avg_kv_size": 3.5,
+    "strategy": "snapkv",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 180.2815,
+    "n_tokens": 8192,
+    "seq_len": 8192,
+    "mode": "eviction",
+    "avg_kv_size": 3.5,
+    "strategy": "snapkv",
+    "ratio": 0.25
+  },
+  {
+    "perplexity": 180.2815,
+    "n_tokens": 8192,
+    "seq_len": 8192,
+    "mode": "eviction",
+    "avg_kv_size": 3.5,
+    "strategy": "rocketkv",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 180.2815,
+    "n_tokens": 8192,
+    "seq_len": 8192,
+    "mode": "eviction",
+    "avg_kv_size": 3.5,
+    "strategy": "rocketkv",
+    "ratio": 0.25
+  },
+  {
+    "perplexity": 180.2815,
+    "n_tokens": 8192,
+    "seq_len": 8192,
+    "mode": "eviction",
+    "avg_kv_size": 3.5,
+    "strategy": "curdkv",
+    "ratio": 0.15
+  },
+  {
+    "perplexity": 180.2815,
+    "n_tokens": 8192,
+    "seq_len": 8192,
+    "mode": "eviction",
+    "avg_kv_size": 3.5,
+    "strategy": "curdkv",
+    "ratio": 0.25
   }
 ]
