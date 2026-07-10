@@ -1,8 +1,0 @@
-{
-  "_from_model_config": true,
-  "output_attentions": true,
-  "output_hidden_states": false,
-  "return_dict_in_generate": true,
-  "transformers_version": "5.13.0",
-  "use_cache": true
-}
