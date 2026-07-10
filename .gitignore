@@ -2,3 +2,5 @@ models/
 *.safetensors
 *.bin
 data/*.parquet
+data/
+models/
