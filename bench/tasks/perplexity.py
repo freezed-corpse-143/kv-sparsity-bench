@@ -50,11 +50,11 @@ class PerplexityTask(Task):
             e = min(s + self.max_length, sl)
             if e - s < 64:
                 break
-            c = ids[:, s:e]
-            lb = c.clone()
-            lb[:, :-1] = -100
+            chunk = ids[:, s:e]
+            labels = chunk.clone()
+            labels[:, :-1] = -100
             with torch.no_grad():
-                nll += model(c, labels=lb).loss.item() * (e - s)
+                nll += model(chunk, labels=labels).loss.item() * (e - s)
                 nt += e - s
             if e == sl:
                 break
@@ -70,22 +70,20 @@ class PerplexityTask(Task):
         runner.strategy.reset()
         cache = None
         nll, nt, steps = 0.0, 0, 0
-        kv_sizes = []
+        kv_list = []
 
         for s in range(0, sl, self.stride):
             e = min(s + self.max_length, sl)
             if e - s < 64:
                 break
+            chunk = ids[:, s:e]
+            labels = chunk.clone()
+            labels[:, :-1] = -100
             with torch.no_grad():
-                out = model(ids[:, s:e], past_key_values=cache,
-                            use_cache=True, output_attentions=True)
-                loss = out.loss
-                if loss is None:
-                    slb = ids[:, s+1:e+1]
-                    loss = torch.nn.CrossEntropyLoss()(
-                        out.logits[:, :-1].reshape(-1, out.logits.size(-1)),
-                        slb.reshape(-1))
-            nll += loss.item() * (e - s)
+                out = model(chunk, past_key_values=cache,
+                            use_cache=True, output_attentions=True,
+                            labels=labels)
+            nll += out.loss.item() * (e - s)
             nt += e - s
             steps += 1
             cache = out.past_key_values
@@ -97,17 +95,18 @@ class PerplexityTask(Task):
                     bgt = runner.strategy.budget_controller.get_budget(steps, li)
                     if sz > bgt:
                         sc = runner.score_buffer.scores[li].sum(dim=0)
-                        ps = [(i, sc[i].item() if i < sc.size(0) else 0.0) for i in range(sz)]
+                        ps = [(i, sc[i].item() if i < sc.size(0) else 0.0)
+                              for i in range(sz)]
                         keep = [p[0] for p in sorted(ps, key=lambda x: -x[1])[:bgt]]
                         if keep:
                             kt = torch.tensor(keep, device=k.device, dtype=torch.long)
                             cache.layers[li].keys = k[:, :, kt, :]
                             cache.layers[li].values = v[:, :, kt, :]
-                    kv_sizes.append(cache.layers[li].keys.size(2))
+                    kv_list.append(cache.layers[li].keys.size(2))
             if e == sl:
                 break
 
-        avg = sum(kv_sizes) / len(kv_sizes) if kv_sizes else 0
+        avg = sum(kv_list) / len(kv_list) if kv_list else 0
         ppl = math.exp(nll / nt) if nt > 0 else float("inf")
         return {"perplexity": round(ppl, 4), "n_tokens": nt, "seq_len": sl,
                 "mode": "eviction", "avg_kv_size": round(avg, 1)}
